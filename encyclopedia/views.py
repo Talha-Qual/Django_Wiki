@@ -15,13 +15,14 @@ def index(request):
         "entries": util.list_entries()
     })
 
-def save(request, **kwargs):
-    title = kwargs.get("title", "")
-    content = kwargs.get("content", "")
-    if content and title:
-        title = title.strip()
-        entry = util.save_entry(title.strip(), str(content).strip())
-        return redirect(reverse(index), title=title)
+
+# def save(request, **kwargs):
+#     title = kwargs.get("title", "")
+#     content = kwargs.get("content", "")
+#     if content and title:
+#         title = title.strip()
+#         entry = util.save_entry(title.strip(), str(content).strip())
+#         return redirect(reverse(index), title=title)
 
 def create_page(request, title = ""):
     previous_title = title
@@ -33,10 +34,8 @@ def create_page(request, title = ""):
 
         action = "updated" if "edit" in hidden else "created"
         messages.success(request, f" Your entry was {action} succesfully!")
-        return save(request, title=title, content =content)
-        # util.save_entry(title=title, content=content)
-        # return redirect(reverse(index), title=title)
-        # return render(request, "encyclopedia/index.html", content)
+        util.save_entry(title=title, content=content)
+        return render(request, "encyclopedia/index.html", {"entries": util.list_entries()} )
     else:
         context = {"config": "create"}
         if title:
