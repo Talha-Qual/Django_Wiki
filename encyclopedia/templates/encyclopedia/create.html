@@ -1,10 +1,9 @@
 {% extends "encyclopedia/layout.html" %}
-
 {% block body %}
 
 <form action = "" method = "post">
 {% csrf_token %}
-<h1>{{title}}</h1>
+
 <label for = "title">
 {% if config and config == "create" %}
 Create a title 
@@ -23,31 +22,31 @@ Edit title
   Edit content
   {% endif %}
 </label><br>
+
 <textarea style ="height: auto" name = "content" id = "content" rows = "10" required>{{entry|safe}}</textarea>
-<input type = "hidden" name = "config" value = {{config}}/>
+<input type = "hidden" name = "config" value = {{config}} />
 <ul>
   {% if config == "create" %}
-  <li>
-    <button name = "submit" value = "create" type=submit>
-      Create
-    </button>
-  </li>
-  <li>
-    <button type = "submit">
-      Cancel
-    </button>
-  </li>
-  {% else %} 
 
-  <button type = "submit" name = "submit" value = "update" disabled>
+  <button name = "submit" value = "create" type=submit>
+    Create
+  </button>
+
+  <button type = "submit">
+    Cancel
+  </button>
+
+  {% else %} 
+  <button type = "submit" name = "submit" value = "update">
     Update
   </button>
-  <li>
-    <button type = "submit">
-      Cancel
-    </button>
-  </li>
+
+  <button type = "submit">
+    Cancel
+  </button>
+
   {% endif %}
+
 </ul>
 </form>
 {% endblock %}
