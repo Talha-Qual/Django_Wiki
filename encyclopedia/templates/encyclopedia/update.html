@@ -1,11 +1,12 @@
 {% extends "encyclopedia/layout.html" %}
 
-{% block title%}
+{% block title %}
 Edit
 {% endblock %}
 
 {% block body %}
-<form action="{% url 'wiki:edit_entry' entry %}" method = "POST">
+<form action="{% url 'wiki:edit_entry' title %}" method = "post">
+  {% csrf_token %}
   <table>
     {{ form.as_table }}
   </table>

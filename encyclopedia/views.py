@@ -94,7 +94,14 @@ def edit_entry(request, title):
         return redirect("wiki:index")
     content = util.get_entry(title)
     entry = EditForm(initial = {content})
-    return render(request, "encyclopedia/update.html", {"entry": entry})
+    # entry.set_values(title, content)
+    # context = {
+    #     "content": content,
+    #     "title": title,
+    #     "form": entry
+    # }
+    return render(request, "encyclopedia/update.html", {"title": title})
+    # return render(request, "encyclopedia/update.html", {"entry": entry})
 
 
 def entry_page(request, title):

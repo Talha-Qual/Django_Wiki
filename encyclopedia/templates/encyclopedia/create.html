@@ -5,7 +5,7 @@ Create Page
 {% endblock %}
 
 {% block body %}
-<form action = "{% url 'wiki:create_page' %}" method = "POST">
+<form action = "{% url 'wiki:create_page' %}" method = "post">
   {% csrf_token %}
   <table>
     {{ form.as_table }}
