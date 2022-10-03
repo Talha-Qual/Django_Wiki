@@ -1,52 +1,15 @@
 {% extends "encyclopedia/layout.html" %}
+
+{% block title %}
+Create Page
+{% endblock %}
+
 {% block body %}
-
-<form action = "" method = "post">
-{% csrf_token %}
-
-<label for = "title">
-{% if config and config == "create" %}
-Create a title 
-{% else %}
-Edit title
-{% endif %}
-</label><br>
-<input id = "title" type = "text" name = "title" value = "{{title|safe}}" required/>
-{{ unavailable_entry }}
-<p data-config = "{{config}}"></p>
-
-<label for="content">
-  {% if config and config == "create" %} 
-  Create content 
-  {% else %}
-  Edit content
-  {% endif %}
-</label><br>
-
-<textarea style ="height: auto" name = "content" id = "content" rows = "10" required>{{entry|safe}}</textarea>
-<input type = "hidden" name = "config" value = {{config}} />
-<ul>
-  {% if config == "create" %}
-
-  <button name = "submit" value = "create" type=submit>
-    Create
-  </button>
-
-  <button type = "submit">
-    Cancel
-  </button>
-
-  {% else %} 
-  <button type = "submit" name = "submit" value = "update">
-    Update
-  </button>
-
-  <button type = "submit">
-    Cancel
-  </button>
-
-  {% endif %}
-
-</ul>
+<form action = "{% url 'wiki:create_page' %}" method = "POST">
+  {% csrf_token %}
+  <table>
+    {{ form.as_table }}
+  </table>
+  <input type = "submit" value = "Create Entry">
 </form>
 {% endblock %}

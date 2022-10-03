@@ -5,12 +5,11 @@
 
 {{page_converted|safe}}
 
-{{random_page_converted|safe}}
 
 <!-- Doesn't Work, causes entry_page and random_page to break!!! -->
 <!-- Doesn't Work, causes entry_page and random_page to break!!! -->
 <!-- Doesn't Work, causes entry_page and random_page to break!!! -->
-<a href = "{% url 'wiki:update_page' new_title %}">Update</a>
+<a href = "{% url 'wiki:edit_entry' title=entry %}">Update</a>
 
 
 {% endblock %}

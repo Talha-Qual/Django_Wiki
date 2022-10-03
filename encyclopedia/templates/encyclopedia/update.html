@@ -1,12 +1,14 @@
 {% extends "encyclopedia/layout.html" %}
-{% block body %}
-
 
 {% block title%}
-  Edit Page
+Edit
 {% endblock %}
-{{ new_content|safe }}
 
-
-
+{% block body %}
+<form action="{% url 'wiki:edit_entry' entry %}" method = "POST">
+  <table>
+    {{ form.as_table }}
+  </table>
+<input type = "submit"><br>
+</form>
 {% endblock %}
