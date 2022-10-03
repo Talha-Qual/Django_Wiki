@@ -1,14 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-</head>
-<body>
+{% extends "encyclopedia/layout.html" %}
+{% block body %}
   <h1>
     Oops, looks like we ran into an error :(
   </h1>
-</body>
-</html>
+  <h2>
+    {{ errormsg }}
+  </h2>
+  <h3>
+    There were no exact matches for "{{search}}", the following are close:
+    <ul>
+      {% for entry in entry_list %}
+      <li><a href="{% url 'wiki:title' title=entry %}">{{ entry }}</a></li> 
+      {% endfor %}
+    </ul>
+  </h3>
+{% endblock %}

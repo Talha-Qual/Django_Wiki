@@ -14,66 +14,23 @@ from . import util
 
 
 def index(request):
-    return render(request, "encyclopedia/index.html", {
-        "entries": util.list_entries()
-    })
-
-
-# def save(request, **kwargs):
-#     title = kwargs.get("title", "")
-#     content = kwargs.get("content", "")
-#     if content and title:
-#         title = title.strip()
-#         entry = util.save_entry(title.strip(), str(content).strip())
-#         return redirect(reverse(index), title=title)
-
-# def update_page(request):
-    # curr_title = title # current title of the page is passed in
-    # curr_content = util.get_entry(curr_title) # current contents of the page is passed in
-    # new_title = curr_title # Enter new title in the form in the html
-    # new_content = curr_content # Enter new content in the form in the html
-
-    # #context = {"new_title":new_title, "new_content": new_content}
-    # return render(request, "encyclopedia/update.html")
-
-
-# def create_page(request, title = ""):
-#     context = {"config": "create"}
-#     previous_title = title
-#     if request.method == "POST":
-#         title = request.POST.get("title", "").strip()
-#         content = request.POST.get("content", "").strip()
-#         submit = request.POST.get("submit")
-#         hidden = request.POST.get("config")
-
-#         if submit is None:
-#             if "create" in hidden:
-#                 return render(request, "encyclopedia/create.html", context)
-#             else:
-#                 return render(request, "encyclopedia/index.html", {"entries": util.list_entries()})
-#         elif not title or not content:
-#             error(msg= "Must add title and content to create entry")
-#             return render(request, "encyclopedia/create.html", context)
-
-#         action = "updated" if "edit" in hidden else "created"
-#         messages.success(request, f" Your entry was {action} succesfully!")
-#         util.save_entry(title=title, content=content)
-#         return HttpResponseRedirect(reverse("wiki:index"))
-#     else:
-#         context = {"config": "create"}
-#         if title:
-#             entry = util.get_entry(title)
-#             if not entry or entry is None:
-#                 return error(msg="Page Not Found")
-#             context["entry"] = entry
-#             context["config"] = "edit"
-
-#         context.update(
-#             {
-#                 "title": title, "unavailable_entry": util.list_entries()
-#             }
-#         )
-#     return render(request, "encyclopedia/create.html", context)
+    entry_list = util.list_entries()
+    if request.method == "POST":
+        search = request.POST.get("q")
+        if search is not None:
+            search = search.lower().strip()
+            for entry in entry_list:
+                if search == entry.lower():
+                    title = entry
+                    return redirect("wiki:title", title)
+                # elif search in entry.lower():
+                #     title = entry
+                #     return render(request, "encyclopedia/error_page.html", {"errormsg": f"There were no exact matches for {search}, the following are close:"})
+            entry_list = list(filter(lambda x: search in x.lower(), entry_list))
+            if entry_list:
+                return render(request, "encyclopedia/error_page.html", {"entry_list": entry_list, "search": search})
+            return render(request, "encyclopedia/error_page.html", {"errormsg": "Entry doesn't exist", "search": search})
+    return render(request, "encyclopedia/index.html", {"entries": util.list_entries()})
 
 def create_page(request):
     if request.method == "POST":
@@ -90,17 +47,18 @@ def create_page(request):
     return render(request, "encyclopedia/create.html", {"form": CreateForm()})
 
 def edit_entry(request, title):
-    if title not in util.list_entries():
-        return redirect("wiki:index")
-    content = util.get_entry(title)
-    entry = EditForm(initial = {content})
-    # entry.set_values(title, content)
-    # context = {
-    #     "content": content,
-    #     "title": title,
-    #     "form": entry
-    # }
-    return render(request, "encyclopedia/update.html", {"title": title})
+    if request.method == "POST":
+        form = EditForm(request.POST)
+        if form.is_valid():
+            content = form.cleaned_data["content"]
+            util.save_entry(title, content)
+            return redirect("wiki:title", title=title)
+        content = util.get_entry(title)
+        entry = EditForm(initial = {content})
+    else:
+        contents = util.get_entry(title)
+        edit_form = EditForm(initial={"content":contents})
+        return render(request, "encyclopedia/update.html", {"form": edit_form, "title": title})
     # return render(request, "encyclopedia/update.html", {"entry": entry})
 
 
