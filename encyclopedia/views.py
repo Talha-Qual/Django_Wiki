@@ -33,7 +33,8 @@ def update_page(request, title):
     new_title = curr_title # Enter new title in the form in the html
     new_content = curr_content # Enter new content in the form in the html
 
-    context = {"new_title":new_title, "new_content": new_content}
+    #context = {"new_title":new_title, "new_content": new_content}
+    return render(request, "encyclopedia/show_links.html", {"new_content": new_content, "new_title": new_title})
 
 
 def create_page(request, title = ""):
@@ -57,8 +58,9 @@ def create_page(request, title = ""):
         action = "updated" if "edit" in hidden else "created"
         messages.success(request, f" Your entry was {action} succesfully!")
         util.save_entry(title=title, content=content)
-        return HttpResponseRedirect(reverse(index))
-        #return render(request, "encyclopedia/index.html", {"entries": util.list_entries()} )
+        # return HttpResponseRedirect(reverse(index))
+        # TODO Need to figure out the correct way to do this, render is no good
+        return render(request, "encyclopedia/index.html", {"entries": util.list_entries()} )
     else:
         context = {"config": "create"}
         if title:
