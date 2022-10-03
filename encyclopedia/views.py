@@ -54,7 +54,7 @@ def edit_entry(request, title):
             util.save_entry(title, content)
             return redirect("wiki:title", title=title)
         content = util.get_entry(title)
-        entry = EditForm(initial = {content})
+        entry = EditForm(initial = {"content": content})
     else:
         contents = util.get_entry(title)
         edit_form = EditForm(initial={"content":contents})
