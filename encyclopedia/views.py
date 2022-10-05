@@ -23,14 +23,14 @@ def index(request):
                 if search == entry.lower():
                     title = entry
                     return redirect("wiki:title", title)
-                # elif search in entry.lower():
-                #     title = entry
-                #     return render(request, "encyclopedia/error_page.html", {"errormsg": f"There were no exact matches for {search}, the following are close:"})
             entry_list = list(filter(lambda x: search in x.lower(), entry_list))
             if entry_list:
                 return render(request, "encyclopedia/error_page.html", {"entry_list": entry_list, "search": search})
             return render(request, "encyclopedia/error_page.html", {"errormsg": "Entry doesn't exist", "search": search})
     return render(request, "encyclopedia/index.html", {"entries": util.list_entries()})
+
+def error(request):
+    return render(request, "encyclopedia/error_page.html")
 
 def create_page(request):
     if request.method == "POST":
@@ -38,7 +38,9 @@ def create_page(request):
         if form.is_valid():
             title = form.cleaned_data["title"]
             if title in util.list_entries():
-                return redirect("wiki:create_page")
+                errmsg = f'An entry with the title {title} already exists; must be unique!'
+                messages.error(request, errmsg)
+                return redirect("wiki:error")
             content = form.cleaned_data["content"]
             util.save_entry(title, content)
             return redirect("wiki:title", title = title)

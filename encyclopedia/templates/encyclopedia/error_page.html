@@ -1,5 +1,15 @@
 {% extends "encyclopedia/layout.html" %}
 {% block body %}
+<h4>
+  {% if messages %}
+  <ul>
+    {% for message in messages %}
+    <li>
+      {% if message.tags %} {% endif %} {{ message }}
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
   <h1>
     Oops, looks like we ran into an error :(
   </h1>
@@ -14,4 +24,6 @@
       {% endfor %}
     </ul>
   </h3>
+  {% endif %}
+</h4>
 {% endblock %}
